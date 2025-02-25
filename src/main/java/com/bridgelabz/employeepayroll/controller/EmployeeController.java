@@ -1,37 +1,52 @@
 package com.bridgelabz.employeepayroll.controller;
 
+import com.bridgelabz.employeepayroll.model.Employee;
+import com.bridgelabz.employeepayroll.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
+
+    @Autowired
+    private EmployeeService employeeService;
+
     @GetMapping("/test")
-    public String testAPI() {
-        return "Employee Payroll REST API is working!";
+    public ResponseEntity<String> testAPI() {
+        return ResponseEntity.ok("Employee Payroll REST API is working!");
     }
 
-    @GetMapping
-    public String getEmployye(){
-        return "Fetching employee";
+    // GET - Fetching employee by ID
+    @GetMapping("/id/{id}")
+    public ResponseEntity<Employee> getEmployee(@PathVariable Long id) {
+        return employeeService.getEmployeeById(id);
     }
 
+    // GET - Fetching all employees
     @GetMapping("/all")
-    public String getAllEmployye(){
-        return "Fetching all employees";
+    public ResponseEntity<List<Employee>> getAllEmployees() {
+        return employeeService.getAllEmployees();
     }
 
-    @PostMapping()
-    public String addEmployee() {
-        return "Employee added!";
+    // POST - Adding an employee
+    @PostMapping
+    public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee) {
+        return employeeService.addEmployee(employee);
     }
 
-    @PutMapping("/update")
-    public String updateEmployee() {
-        return "Employee updated!";
+    // PUT - Updating employee data
+    @PutMapping("/id/{id}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long id, @RequestBody Employee employee) {
+        return employeeService.updateEmployee(id, employee);
     }
 
-    @DeleteMapping("/delete")
-    public String deleteEmployee() {
-        return "Employee deleted!";
+    // DELETE - Removing employee data
+    @DeleteMapping("/id/{id}")
+    public ResponseEntity<String> deleteEmployee(@PathVariable Long id) {
+        return employeeService.deleteEmployee(id);
     }
 }
